@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admissions - Ghulam Muhammad Public School Kasur</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="fevicon.PNG">
+
+    <!-- EmailJS Script -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+</head>
+<body>
+
+    <header class="navbar" id="mainNavbar">
+        <div class="logo-area">
+            <img src="logo - Copy.jfif" alt="Ghulam Muhammad Public School logo" class="school-logo-img">
+            <span class="logo-divider" aria-hidden="true"></span>
+            <img src="tawaan-logo-new.png" alt="Taawan Foundation logo" class="partner-logo-img">
+            <div class="school-name">
+                <h2>Ghulam Muhammad Public School</h2>
+            </div>
+        </div>
+        <div class="menu-toggle" id="menuToggle">
+    <i class="fas fa-bars"></i>
+</div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="academics.html">Academics</a></li>
+                <li><a href="admissions.html" class="active">Admissions</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+        </nav>
+      
+        <a href="donate.html" class="donate-btn">Donate Us</a>
+    </header>
+
+    <section class="adm-page-header">
+        <h1 class="animate-fade-in">Admissions</h1>
+        <p>Your journey to excellence begins here</p>
+    </section>
+    
+    <section class="adm-content-wrapper">
+        <h2>Admission Steps</h2>
+        
+        <div class="adm-grid-three-col reveal-section">
+            <div class="adm-card hover-scale-card">
+                <h3>1. Application Form</h3>
+                <p>Complete the online application form available on our website. Ensure all required fields are filled.</p>
+            </div>
+            <div class="adm-card hover-scale-card">
+                <h3>2. Document Submission</h3>
+                <p>Submit the necessary documents including previous academic records and birth certificate.</p>
+            </div>
+            <div class="adm-card hover-scale-card">
+                <h3>3. Interview</h3>
+                <p>After review, you will be invited for an interview with the admissions committee.</p>
+            </div>
+        </div>
+
+        <div class="adm-faq-section reveal-section" id="admFaq">
+            <h2>Frequently Asked Questions</h2>
+            <div class="adm-accordion">
+                <div class="adm-accordion-item">
+                    <div class="adm-accordion-header">What is the age requirement for admission? <i class="fas fa-chevron-down accordion-icon"></i></div>
+                    <div class="adm-accordion-body"><p>Children must be at least 4 years old by September 1st of the application year for kindergarten.</p></div>
+                </div>
+                <div class="adm-accordion-item">
+                    <div class="adm-accordion-header">Are there any entrance exams? <i class="fas fa-chevron-down accordion-icon"></i></div>
+                    <div class="adm-accordion-body"><p>Yes, basic evaluation tests for English, Urdu, and Mathematics are conducted for primary classes.</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <button id="backToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+    <section class="adm-container" id="feeStructure">
+        <h2 class="adm-main-title">Admission Schedule & Fee Structure (2026)</h2>
+        <p class="adm-subtitle">Ghulam Muhammad Public School offers quality education with an affordable fee structure for everyone.</p>
+
+        <div class="adm-table-wrapper">
+            <table class="adm-table">
+                <thead>
+                    <tr>
+                        <th>Class Level</th>
+                        <th>Admission Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-label="Class Level"><strong>Playgroup & Nursery</strong></td>
+                      
+                        <td data-label="Admission Status"><span class="status-badge open">Open</span></td>
+                    </tr>
+                    <tr>
+                        <td data-label="Class Level"><strong>Primary (Class 1 - 5)</strong></td>
+                       
+                        <td data-label="Admission Status"><span class="status-badge open">Open</span></td>
+                    </tr>
+                    <tr>
+                        <td data-label="Class Level"><strong>Middle (Class 6 - 8)</strong></td>
+                      
+                        <td data-label="Admission Status"><span class="status-badge open">Open</span></td>
+                    </tr>
+                    <tr>
+                        <td data-label="Class Level"><strong>Matric (Class 9 - 10)</strong></td>
+                       
+                        <td data-label="Admission Status"><span class="status-badge closed">Closed</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <section class="admission-form-section">
+    <h1>Admission Form</h1>
+    <p>Please fill the form carefully to apply for admission.</p>
+
+    <form class="admission-form" id="admissionForm">
+
+        <div class="form-group">
+            <label>Student Name</label>
+            <input type="text" name="student_name" placeholder="Enter student name" required>
+        </div>
+
+        <div class="form-group">
+            <label>Father Name</label>
+            <input type="text" name="father_name" placeholder="Enter father name" required>
+        </div>
+
+        <div class="form-group">
+            <label>Age</label>
+            <input type="number" name="age" placeholder="Enter age" required>
+        </div>
+
+        <div class="form-group">
+            <label>Class Applying For</label>
+            <select name="class" required>
+                <option value="">Select Class</option>
+                <option>Play Group</option>
+                <option>Nursery</option>
+                <option>Prep</option>
+                <option>Class 1</option>
+                <option>Class 2</option>
+                <option>Class 3</option>
+                <option>Class 4</option>
+                <option>Class 5</option>
+                <option>Class 6</option>
+                <option>Class 7</option>
+                <option>Class 8</option>
+                <option>Class 9</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Contact Number</label>
+            <input type="tel" name="contact" placeholder="03XX-XXXXXXX" required>
+        </div>
+
+        <div class="form-group">
+            <label>Address</label>
+            <textarea name="address" placeholder="Enter full address" required></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">Submit Application</button>
+
+    </form>
+</section>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col footer-brand">
+                <h3>Our Institution</h3>
+                <div class="footer-logos">
+                    <img src="logo - Copy.jfif" alt="Ghulam Muhammad Public School logo" class="footer-logo-img">
+                    <span class="footer-logo-divider" aria-hidden="true"></span>
+                    <img src="tawaan-logo-new.png" alt="Taawan Foundation logo" class="footer-logo-img footer-logo-taawan">
+                </div>
+                <p class="footer-brand-text">
+                    <strong>Ghulam Muhammad Public School</strong>
+                    A project of <strong>Taawan Foundation</strong> &mdash; established 2011.
+                </p>
+            </div>
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="academics.html">Academics</a></li>
+                    <li><a href="admissions.html">Admissions</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Academics</h3>
+                <ul>
+                    <li><a href="academics.html#syllabusList">Syllabus</a></li>
+                    <li><a href="academics.html#syllabusList">List of Books</a></li>
+                    <li><a href="admissions.html#feeStructure">Fee Structure</a></li>
+                    <li><a href="admissions.html#admFaq">Age Criteria</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-socials">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/ghulmmuhammad_public_school?igsh=eDV4ZjRpcXZ6cGs5" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="https://www.tiktok.com/@gmpschoolkasur?_r=1&_t=ZS-97KenDFgh0e" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                </div>
+                <p class="footer-contact-info">📧 ghulmmuhammed2@gmail.com</p>
+                <p>📞 03256598933</p>
+            </div>
+        </div>
+        <div class="footer-bottom"><p>&copy; @GMPS 2011. All Rights Reserved.</p></div>
+    </footer>
+<div id="donationModal" class="donate-modal">
+        <div class="donate-modal-content">
+            <span class="donate-modal-close" id="closeDonateModal">&times;</span>
+            
+            <div class="donate-modal-header">
+                <div class="heart-icon-wrapper">
+                    <i class="fas fa-heart animate-beat"></i>
+                </div>
+                <h2>Support Our Children</h2>
+                <p>Your contribution directly funds free books, uniforms and quality education.</p>
+            </div>
+  <div class="donate-tabs">
+                <button class="tab-btn active" onclick="switchDonateTab(event, 'bankTab')"><i class="fas fa-university"></i> Bank Transfer</button>
+                <button class="tab-btn" onclick="switchDonateTab(event, 'walletTab')"><i class="fas fa-mobile-alt"></i> Mobile Wallets</button>
+            </div>
+<div id="bankTab" class="tab-content active">
+    <div class="donate-method-card premium-card">
+
+        <div class="card-row">
+            <strong>Bank Name:</strong>
+            <span>Faysal Bank</span>
+        </div>
+
+        <div class="card-row">
+            <strong>Account Title:</strong>
+            <span>ANJUMAN TA'AWN FOUNDATION</span>
+        </div>
+
+        <div class="card-row">
+            <strong>Account No:</strong>
+            <span class="copy-field">
+                PK86FAYS0001300060014306
+                <button onclick="copyText('PK86FAYS0001300060014306', this)">
+                    <i class="far fa-copy"></i> Copy
+                </button>
+            </span>
+        </div>
+
+    </div>
+</div>
+
+<div id="walletTab" class="tab-content">
+
+    <div class="wallet-grid">
+
+        <div class="wallet-card easypaisa">
+            <span class="wallet-badge">EasyPaisa</span>
+
+            <p class="wallet-title">
+                Sobia Anwar
+            </p>
+
+            <div class="wallet-num-box">
+                <span>03256598933</span>
+
+                <button onclick="copyText('03256598933', this)">
+                    <i class="far fa-copy"></i> Copy
+                </button>
+            </div>
+        </div>
+
+        <div class="wallet-card jazzcash">
+            <span class="wallet-badge">JazzCash</span>
+
+            <p class="wallet-title">
+                Sobia Anwar
+            </p>
+
+            <div class="wallet-num-box">
+                <span>03256598933</span>
+
+                <button onclick="copyText('03256598933', this)">
+                    <i class="far fa-copy"></i> Copy
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+  <script src="script.js"></script>
+</body>
+</html>

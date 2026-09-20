@@ -1,0 +1,125 @@
+<!doctype html><meta charset="utf-8">
+<title>audit</title>
+<style>body{font:12px/1.5 monospace;padding:10px}#f{position:fixed;right:0;bottom:0;border:0;visibility:hidden}</style>
+<pre id="out">RUNNING</pre>
+<iframe id="f" height="820"></iframe>
+<script>
+const PAGES = (new URLSearchParams(location.search).get('p') || 'index.html').split('|');
+const WIDTHS = [320,360,375,390,412,414,430,480,768];
+const MIN_FONT = 12;   // px
+const MIN_TAP  = 44;   // px — Apple HIG / Material minimum touch target
+const INTERACTIVE = 'a,button,input,select,textarea,summary,[onclick]';
+const f = document.getElementById('f'), out = document.getElementById('out');
+const wait = ms => new Promise(r => setTimeout(r, ms));
+
+const sel = e => {
+  let s = e.tagName.toLowerCase();
+  if (e.id) s += '#' + e.id;
+  if (typeof e.className === 'string' && e.className.trim())
+    s += '.' + e.className.trim().split(/\s+/).slice(0,3).join('.');
+  return s;
+};
+const visible = (el, cs) =>
+  cs.display !== 'none' && cs.visibility !== 'hidden' && parseFloat(cs.opacity) > 0.01;
+
+function scan(doc, win, cw) {
+  const de = doc.documentElement;
+  const r = { over: Math.round(de.scrollWidth - de.clientWidth),
+              out: [], tiny: [], tap: [], media: [], distort: [], clip: [] };
+  const push = (arr, k, cap) => { if (arr.length < cap && !arr.includes(k)) arr.push(k); };
+
+  const clipped = el => {
+    for (let n = el; n && n !== doc.body; n = n.parentElement) {
+      const c = win.getComputedStyle(n);
+      if (c.clipPath && c.clipPath !== 'none') return true;      // sr-only
+      if (/hidden|clip/.test(c.overflow) && n.clientWidth <= 2) return true;
+    }
+    return false;
+  };
+  doc.querySelectorAll('body *').forEach(el => {
+    const cs = win.getComputedStyle(el);
+    if (!visible(el, cs)) return;
+    if (clipped(el)) return;
+    const b = el.getBoundingClientRect();
+    if (b.width === 0 && b.height === 0) return;
+
+    // 1. sticking out past the viewport (fixed elements don't create scroll)
+    if (cs.position !== 'fixed' && (b.right > cw + 1 || b.left < -1))
+      push(r.out, `${sel(el)} l=${Math.round(b.left)} r=${Math.round(b.right)} w=${Math.round(b.width)}`, 6);
+
+    // 2. text too small — only elements that hold their own text node
+    if ([...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim().length > 2)) {
+      const fs = parseFloat(cs.fontSize);
+      if (fs < MIN_FONT) push(r.tiny, `${sel(el)}@${fs.toFixed(1)}px`, 8);
+    }
+
+    // 3. tap targets — outermost interactive element only, so icons inside a
+    //    big button are not double-counted
+    if (el.matches(INTERACTIVE) && !(el.parentElement && el.parentElement.closest(INTERACTIVE))) {
+      if (!(el.tagName === 'INPUT' && /hidden/i.test(el.type))) {
+        const short = Math.min(b.width, b.height);
+        if (short > 0 && short < MIN_TAP)
+          push(r.tap, `${sel(el)}@${Math.round(b.width)}x${Math.round(b.height)}`, 8);
+      }
+    }
+
+    // 4. media wider than the viewport
+    if (/^(IMG|VIDEO|IFRAME|CANVAS)$/.test(el.tagName)) {
+      if (b.width > cw + 1) push(r.media, `${sel(el)}@${Math.round(b.width)}px`, 6);
+      // 5. stretched images (object-fit still the default `fill`)
+      if (el.tagName === 'IMG' && el.naturalWidth > 0 && cs.objectFit === 'fill') {
+        const nat = el.naturalWidth / el.naturalHeight, got = b.width / b.height;
+        if (Math.abs(nat - got) / nat > 0.12)
+          push(r.distort, `${sel(el)} nat=${nat.toFixed(2)} shown=${got.toFixed(2)}`, 6);
+      }
+    }
+
+    // 6. real content clipped by an overflow:hidden box.
+    //    scrollWidth alone is not enough — decorative ::before/::after layers
+    //    (e.g. an offset blurred circle) inflate it without clipping anything
+    //    the user needs. Compare the widest actual child instead.
+    if (/hidden|clip/.test(cs.overflowX) && el.scrollWidth > el.clientWidth + 2 && el.textContent.trim()) {
+      let widest = 0;
+      const base = el.getBoundingClientRect().left + el.clientLeft;
+      el.querySelectorAll('*').forEach(ch => {
+        const cb = ch.getBoundingClientRect();
+        if (cb.width > 0) widest = Math.max(widest, cb.right - base);
+      });
+      if (widest > el.clientWidth + 2)
+        push(r.clip, `${sel(el)} realContent=${Math.round(widest)} box=${el.clientWidth}`, 6);
+    }
+  });
+  return r;
+}
+
+(async () => {
+  const lines = [];
+  for (const p of PAGES) {
+    f.style.width = '1440px';
+    await new Promise(r => { f.onload = r; f.src = p; });
+    // Kill transitions/animations inside the frame. Without this, every
+    // measurement taken right after a resize catches the navbar mid-transition
+    // (0.28s) and reports phantom collapsed boxes.
+    const st = f.contentDocument.createElement('style');
+    st.textContent = '*,*::before,*::after{transition:none !important;animation:none !important}';
+    f.contentDocument.head.appendChild(st);
+    await wait(500);
+    for (const w of WIDTHS) {
+      f.style.width = w + 'px';
+      await wait(600);
+      const doc = f.contentDocument, win = f.contentWindow;
+      const s = scan(doc, win, doc.documentElement.clientWidth);
+      const bits = [];
+      if (s.over > 1)       bits.push('OVERFLOW=' + s.over + 'px');
+      if (s.out.length)     bits.push('OUT[' + s.out.join(' | ') + ']');
+      if (s.tiny.length)    bits.push('TINYTEXT[' + s.tiny.join(' | ') + ']');
+      if (s.tap.length)     bits.push('SMALLTAP[' + s.tap.join(' | ') + ']');
+      if (s.media.length)   bits.push('MEDIAWIDE[' + s.media.join(' | ') + ']');
+      if (s.distort.length) bits.push('DISTORT[' + s.distort.join(' | ') + ']');
+      if (s.clip.length)    bits.push('CLIPPED[' + s.clip.join(' | ') + ']');
+      lines.push((bits.length ? 'FAIL ' : 'ok   ') + p + ' @' + w + (bits.length ? '  ' + bits.join('  ') : ''));
+    }
+  }
+  out.textContent = 'AUDIT-START\n' + lines.join('\n') + '\nAUDIT-END';
+})();
+</script>
